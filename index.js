@@ -5,7 +5,8 @@ import {
   View,
   Text,
   DeviceEventEmitter,
-  ActivityIndicator
+  ActivityIndicator,
+  TouchableOpacity
 } from 'react-native';
 
 import PropTypes from 'prop-types';
@@ -68,8 +69,20 @@ class BusyIndicator extends React.Component {
 
   changeLoadingEffect(state) {
     this.setState({
+      cancellable: state.cancellable,
+      onCancelClick: state.onCancelClick,
       isVisible: state.isVisible,
       text: state.title ? state.title : this.props.text
+    });
+  }
+
+  handleCancelClick(){
+    this.setState({
+      isVisible: false
+    }, ()=>{
+      if(this.state.onCancelClick){
+        this.state.onCancelClick()
+      }
     });
   }
 
@@ -81,8 +94,8 @@ class BusyIndicator extends React.Component {
     const customStyles = StyleSheet.create({
       overlay: {
         backgroundColor: this.props.overlayColor,
-        width: this.props.overlayWidth,
-        height: this.props.overlayHeight
+        minWidth: this.props.overlayWidth,
+        minHeight: this.props.overlayHeight
       },
       
       text: {
@@ -90,6 +103,7 @@ class BusyIndicator extends React.Component {
         fontSize: this.props.textFontSize
       }
     });
+    
 
     return (
       <View style={styles.container}>
@@ -104,6 +118,12 @@ class BusyIndicator extends React.Component {
             style={[styles.text, customStyles.text]}>
             {this.state.text}
           </Text>
+
+          {this.state.cancellable && (
+            <TouchableOpacity onPress={this.handleCancelClick.bind(this)}>
+              <Text style={[styles.text, customStyles.text, {paddingVertical: 10}]}>Cancel</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );

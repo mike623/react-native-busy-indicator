@@ -4,8 +4,8 @@ const loaderHandler = {
   hideLoader () {
     DeviceEventEmitter.emit('changeLoadingEffect', {isVisible: false});
   },
-  showLoader (title) {
-    DeviceEventEmitter.emit('changeLoadingEffect', {title, isVisible: true});
+  showLoader (title, option) {
+    DeviceEventEmitter.emit('changeLoadingEffect', {title, isVisible: true, ...option});
   }
 };
 
